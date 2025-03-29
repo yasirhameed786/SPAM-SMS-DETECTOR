@@ -2,5 +2,4 @@ flask
 scikit-learn
 numpy
 pandas
-pickle-mixin
 gunicorn
