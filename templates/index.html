@@ -8,17 +8,32 @@
 </head>
 <body>
     <div class="container">
-        <h1>Spam SMS Detector</h1>
+        <h1>📩 Spam SMS Detector</h1>
+        
         <textarea id="smsInput" placeholder="Enter your message..."></textarea>
-        <button onclick="checkSpam()">Check</button>
+        <button id="checkButton" onclick="checkSpam()">Check</button>
+
         <p id="result"></p>
     </div>
 
     <script>
         function checkSpam() {
-            let message = document.getElementById("smsInput").value;
+            let message = document.getElementById("smsInput").value.trim();
             let resultElement = document.getElementById("result");
+            let button = document.getElementById("checkButton");
+
+            resultElement.innerText = "";
+            resultElement.className = "";
+
+            if (!message) {
+                resultElement.innerText = "⚠️ Please enter a message!";
+                resultElement.className = "error";
+                return;
+            }
     
+            button.disabled = true;
+            button.innerText = "Checking...";
+
             fetch("/predict", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -29,7 +44,15 @@
                 resultElement.innerText = "Result: " + data.result;
                 resultElement.className = "fade-in " + (data.result === "Spam" ? "spam" : "not-spam");
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                resultElement.innerText = "❌ Error: Unable to process request.";
+                resultElement.className = "error";
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerText = "Check";
+            });
         }
     </script>
 </body>
