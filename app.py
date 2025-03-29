@@ -1,36 +1,43 @@
-from flask import Flask, render_template, request
+import os
 import pickle
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
-with open('spam_model.pkl', 'rb') as model_file:
+MODEL_PATH = "spam_model.pkl"
+VECTORIZER_PATH = "vectorizer.pkl"
+
+if not os.path.exists(MODEL_PATH) or not os.path.exists(VECTORIZER_PATH):
+    raise FileNotFoundError("Error: Model files are missing. Please upload 'spam_model.pkl' and 'vectorizer.pkl'.")
+
+with open(MODEL_PATH, "rb") as model_file:
     model = pickle.load(model_file)
 
-with open('vectorizer.pkl', 'rb') as vec_file:
-    vectorizer = pickle.load(vec_file)
+with open(VECTORIZER_PATH, "rb") as vectorizer_file:
+    vectorizer = pickle.load(vectorizer_file)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
-    if request.method == 'POST':
-        try:
-            message = request.form.get('message', '').strip()
+    try:
+        data = request.get_json()
+        message = data.get("message", "")
 
-            if not message:
-                return render_template('index.html', error="⚠️ Please enter a message!")
+        if not message:
+            return jsonify({"error": "No message provided"}), 400
 
-            message_tfidf = vectorizer.transform([message])
+        transformed_message = vectorizer.transform([message])
+        
+        prediction = model.predict(transformed_message)[0]
+        result = "Spam" if prediction == 1 else "Not Spam"
 
-            prediction = model.predict(message_tfidf)[0]
-            result = "Spam" if prediction == 1 else "Not Spam"
+        return jsonify({"result": result})
 
-            return render_template('index.html', prediction=result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        except Exception as e:
-            return render_template('index.html', error=f"❌ Error: {str(e)}")
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
