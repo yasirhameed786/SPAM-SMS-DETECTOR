@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('./sms.png') no-repeat center center fixed; 
+    background-size: cover; 
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    background: linear-gradient(135deg, #606b6d, #b2d3db); /* Attractive Gradient */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+textarea {
+    width: 90%;
+    height: 120px;
+    padding: 12px;
+    margin: 15px auto;
+    display: block; /* Centers the text box */
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    resize: none;
+}
+
+textarea:focus {
+    border-color: #6e8efb;
+    box-shadow: 0 0 10px rgba(110, 142, 251, 0.5);
+}
+
+button {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    color: white;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 5px 10px rgba(255, 107, 107, 0.3);
+    margin-top: 15px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff4757, #ff6347);
+    box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
+    transform: translateY(-2px);
+}
+
+#result {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.spam {
+    color: #d32f2f;
+    text-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+}
+
+.not-spam {
+    color: #388e3c;
+    text-shadow: 0 0 10px rgba(56, 142, 60, 0.5);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 12px 18px;
+    }
+}
