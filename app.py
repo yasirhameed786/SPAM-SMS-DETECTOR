@@ -3,6 +3,7 @@ import pickle
 
 app = Flask(__name__)
 
+# Load Trained Model & Vectorizer
 with open('spam_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
@@ -16,13 +17,15 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        message = request.form['message']
+        message = request.form.get('message', '').strip()
         
+        if not message:
+            return render_template('index.html', prediction="⚠️ Please enter a message!")
+
         message_tfidf = vectorizer.transform([message])
-        
         prediction = model.predict(message_tfidf)[0]
-        
-        result = "Spam" if prediction == 1 else "Not Spam"
+
+        result = "🚫 Spam" if prediction == 1 else "✅ Not Spam"
         return render_template('index.html', prediction=result)
 
 if __name__ == '__main__':
